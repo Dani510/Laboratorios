@@ -1,0 +1,54 @@
+public class Laboratorio1 {
+
+    public static void main(String[] args) {
+        
+        Scanner teclado;
+        int nCasos, nLetras; //Se guardan la cantidad de casos y la cantidad de letras del caso
+        String caso,output="",letraNodo; //Se guarda la cadena del caso y los resultados de todos los casos
+        
+        teclado = new Scanner(System.in);
+        caso = teclado.nextLine();
+        nCasos = Integer.valueOf(caso);
+
+        for (int i = 0; i < nCasos; i++) { // Ciclo para todos los casos
+
+            caso = teclado.nextLine();
+            
+            String[] nodos = caso.split(";"); // Se genera un arreglo con las asociaciones de los nodos
+
+            int[] gradoNodos = new int[nodos.length]; // Se guardan los grados de cada uno de los nodos
+            
+            for (int j = 0; j < nodos.length; j++) { // Ciclo para guardar el grado de cada nodo
+                
+                if (nodos[j].length() > 2) {
+                    gradoNodos[j] = nodos[j].substring(2).length(); /*Se guardan la cantidad 
+                                                                     de asociaciones del nodo*/
+                }
+                else{
+                    gradoNodos[j] = 0; //No existían asociaciones dirigidas hacia otros nodos
+                }
+                
+                letraNodo = nodos[j].substring(0, 1); //Se obtiene la letra de cada nodo            
+
+                nLetras = caso.length(); //Se guarda la longitud inicial
+                
+                caso = caso.replace(letraNodo, ""); /* Se reemplaza la letra que representa al nodo por 
+                                                        un caracter vacío */
+                
+                gradoNodos[j] += nLetras - caso.length() - 1; /*Al restar la longitud inicial  
+                                                              por la longitud sin la letra del nodo
+                                                              se obtiene la cantidad de veces que
+                                                              se encontraba la letra en la cadena*/
+                
+                output += letraNodo + "=" + gradoNodos[j] + ", ";/*Se forma una cadena con las
+                                                                    especificaciones dadas*/
+            }  
+            
+            output = output.substring(0, output.length()-2); //Se elimina la última coma
+            
+            output += "\n"; // Se agrega un salto de línea para cada caso
+        }
+        System.out.println(output); //Se imprime en consola la información de todos los casos
+    }
+
+}
