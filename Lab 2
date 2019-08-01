@@ -1,0 +1,77 @@
+public class Laboratorio2 {
+
+    public static void main(String[] args) {
+
+        Scanner tec;
+
+        int nCasos,tamañoLista;
+        String nodo,ultNodo,ciclo;
+
+        Boolean bipartido;
+
+        String[] grafo, rel;
+
+        List<String> ciclos;
+
+        tec = new Scanner(System.in);
+
+        nCasos = Integer.parseInt(tec.nextLine());
+
+        for (int i = 0; i < nCasos; i++) {
+            bipartido = true;
+            ciclos = new ArrayList<>();
+
+            grafo = tec.nextLine().split(";");
+            
+            for (int j = 0; j < grafo.length; j++) {
+                
+                nodo = grafo[j].substring(0, 1);
+                
+                if (j == 0 && grafo[j].length() > 2) {
+                    rel = grafo[j].substring(2).split("");
+                    
+                    for (int k = 0; k < rel.length; k++) {
+                        ciclos.add(nodo + rel[k]);
+                    }       
+                }
+                
+                else if (grafo[j].length() > 2) {
+                    
+                    rel = grafo[j].substring(2).split("");
+                    
+                    tamañoLista = ciclos.size();
+                    
+                    for (int k = 0; k < tamañoLista; k++) {
+                        
+                        ciclo = ciclos.get(k);                         
+                        ultNodo = ciclo.substring(ciclo.length() - 1);
+                        
+                        if (ultNodo.equals(nodo)) {
+                            
+                            for (String rel1 : rel) {
+                                ciclos.add(ciclo + rel1);
+                            }
+                            ciclos.remove(k);
+                            k--;
+                            tamañoLista--;
+                        }                        
+                    }
+                }
+            }
+            for (int j = 0; j < ciclos.size(); j++) {
+                ciclo = ciclos.get(j);
+     
+                if (ciclo.length() % 2 == 0 
+                        && ciclo.substring(0,1).equals(ciclo.substring(ciclo.length() - 1))) {
+                    bipartido = false;
+                }
+            }
+           
+            if (bipartido) {
+                System.out.println(1);
+            } else {
+                System.out.println(0);
+            }
+        }
+    }
+}
