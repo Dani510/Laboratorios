@@ -1,0 +1,109 @@
+public class Laboratorio2 {
+
+    public static void main(String[] args) {
+
+        Scanner tec;
+
+        int nCasos, tamañoLista;
+        /*Se guardan los casos y la cantidad de 
+                                  elementos de la lista de ciclos */
+
+        String nodo, priNodo, ultNodo, camino;
+        /*nodo: se guarda la letra del nodo
+        priNodo: se guarda la primera letra de un camino
+                                        ultNodo: se guarda la ultima letra de 
+                                        un camino
+                                        camino: se guarda un camino*/
+
+        Boolean bipartido; //Determina si es bipartido o no
+
+        String[] grafo, conexiones;
+        /*grafo: se guarda la lista de adyacencia
+                                      conexnodo con otros */
+
+        List<String> caminos; //*Se guardan todos los caminos
+
+        tec = new Scanner(System.in);
+
+        nCasos = Integer.parseInt(tec.nextLine()); //Se guarda la cantidad de casos
+
+        for (int i = 0; i < nCasos; i++) {
+            bipartido = true; //Se asume que es bipartido desde el principio
+            caminos = new ArrayList<>(); //Se reinicializa la lista para cada caso
+
+            grafo = tec.nextLine().split(";"); //Se guarda la lista de adyacencia
+
+            for (int j = 0; j < grafo.length; j++) { //Se recorre la lista de adyacencia
+
+                nodo = grafo[j].substring(0, 1); //Se obtiene la representación del nodo
+
+                if (grafo[j].length() > 2) { //Si tiene conexiones
+                    conexiones = grafo[j].substring(2).split(""); /*Se guardan las 
+                                                                    conexiones del
+                                                                    nodo */
+
+                    tamañoLista = caminos.size(); /*Se guarda el tamaño de la lista
+                                                    para evitar modificaciones
+                                                    al mismo.*/
+
+                    for (int k = 0; k < tamañoLista; k++) {
+
+                        camino = caminos.get(k); //Se obtiene un camino
+                        //Se obtiene el primer nodo del camino
+                        priNodo = camino.substring(0, 1); 
+                        // Se obtiene el último nodo del camino
+                        ultNodo = camino.substring(camino.length() - 1); 
+                        
+                        
+                        if (ultNodo.equals(nodo)) { /*Si el último nodo del camino
+                            es el mismo nodo del cual se obtienen las conexiones
+                            en esta vuelta, se agregaran las conexiones de este 
+                            nodo al camino con el mismo nodo de último
+                            */
+
+                            for (String rel : conexiones) { /*Se añade cada conexión del 
+                                nodo al camino formando así caminos con últimos nodos
+                                diferentes entre si */                       
+
+                                if ((camino + rel).length() % 2 == 0 && priNodo.equals(rel)) {
+                                    /*Si la longitud de la cadena del camino 
+                                    formado es par, es decir, contiene una 
+                                    cantidad impar de nodos sin contar
+                                    repetidos y el primer nodo del camino es el 
+                                    mismo del último, se encuentra un ciclo impar,
+                                    si se encuentra un ciclo impar dentro de un
+                                    grafo, este no será bipartido.*/
+                                    bipartido = false;
+                                    k = tamañoLista - 1; //Para romper el ciclo anterior
+                                    j = grafo.length; /*Para romper el ciclo anterior 
+                                                      al anterior  */
+                                    break;
+                                }
+                                
+                                caminos.add(camino + rel); //Se añade un nuevo camino
+                            }
+                            caminos.remove(k); /*Se remueve el camino del cual
+                            se crearon nuevos caminos porque ya no se necesita
+                            */
+                            k--;
+                            tamañoLista--;
+                        }
+                    }
+                    for (String rel1 : conexiones) { /*Se añaden las conexiones
+                                                      del nodo con otros. */
+                        caminos.add(nodo + rel1);
+                    }
+                } 
+                else { //Si existe un nodo aislado
+                    bipartido = false;
+                }
+            }
+
+            if (bipartido) { //Si es bipartido se imprime 1
+                System.out.println(1);
+            } else { //Si no se imprime 0
+                System.out.println(0);
+            }
+        }
+    }
+}
